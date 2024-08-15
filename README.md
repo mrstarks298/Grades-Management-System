@@ -98,12 +98,6 @@ Professors must upload grades in a CSV file with the following columns:
 - **Flashy messages for user feedback**
 - **Logging of errors for debugging**
 
-## Future Improvements
-
-- **Implement email notifications for new grades**
-- **Add data visualization for grade trends**
-- **Enhance mobile responsiveness**
-- **Implement a grade appeal system**
 
 ## Contributing
 
