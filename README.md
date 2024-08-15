@@ -1,4 +1,7 @@
-# Grades Management System
+<h1 align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Operator+Mono&size=37&duration=2800&pause=2000&color=FAFAFA&center=true&vCenter=true&width=940&height=50&lines=Grades+Management+System;Manage+and+View+Student+Grades+Effortlessly" alt="Typing SVG" />
+</h1>
+
 
 ## Overview
 
