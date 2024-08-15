@@ -20,8 +20,7 @@ The Grades Management System is a web application built with Flask that enables 
 - **See detailed grade breakdowns including:**
     - Individual course grades
     - Overall semester performance
-    - Class averages and rankings
-- **Hide specific grades if desired**
+    - Class averages and rankings*
 - **Receive notifications for newly uploaded grades**
 
 ## Technical Stack
