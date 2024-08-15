@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Dashboard - Sitare University</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="static/styles_professor.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <img src="https://sitare.org/univ/assets/WebP/Sitare-University-Logo.webp" alt="Sitare University Logo">
+            </a>
+            <nav>
+                <ul>
+                    <li><button id="notificationToggle"><i class='bx bx-bell'></i></button></li>
+                    <li><button id="darkModeToggle"><i class='bx bx-moon'></i></button></li>
+                    <li><a href="{{ url_for('logout') }}" class="logout"><i class='bx bx-log-out icon'></i>Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <h3><i class='bx bx-cloud-upload'></i> Uploaded Grades:</h3>
+            <div class="upload-buttons-container">
+                {% for upload in uploads %}
+                <div class="upload-row">
+                    <button onclick="displayGrades('{{ upload.id }}')">
+                        {{ upload.filename }}
+                        ({{ upload.timestamp.strftime('%Y-%m-%d %H:%M:%S') }})
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="sidebar-toggle" id="sidebarToggle">
+            <i class='bx bx-chevron-left'></i>
+        </div>
+        
+        <div class="content">
+            {% block content %}
+            <h1 class="welcome-message">
+                <i class='bx bx-user-circle' style='font-size: 2rem;'></i>
+                Welcome, {{ session.user.full_name }}
+                <span style='font-size: 2rem;'>🎓</span>
+            </h1>
+
+            <div id="flash-message" class="alert" style="display: none;" role="alert"></div>
+
+            <div class="spreadsheet-template">
+                <h3><i class='bx bx-spreadsheet'></i> Google Spreadsheet Template:</h3>
+                <p>Please use the following Google Spreadsheet template for entering grades:</p>
+                <a href="https://docs.google.com/spreadsheets/d/1phkcubiXoHHjU0q27emAX4Qtb9CBzCjEqCt9F1eFqMQ/edit?usp=sharing" target="_blank" class="btn btn-primary">
+                    <i class='bx bx-link-external'></i> Open Google Spreadsheet Template
+                </a>
+                <p class="mt-2">Once you've filled out the spreadsheet, download it as a CSV file and upload it below.</p>
+            </div>
+            
+            <form id="upload-form" enctype="multipart/form-data" class="upload-form mt-4">
+                <label for="file"><i class='bx bx-upload'></i> Upload CSV of Grades:</label>
+                <input type="file" id="file" name="file" accept=".csv">
+                <button type="submit"><i class='bx bx-cloud-upload'></i> Upload</button>
+            </form>
+
+              
+
+            <h2>Previous Uploads</h2>
+            <ul>
+            {% for upload in uploads %}
+                <li>{{ upload.filename }} - {{ upload.timestamp }}</li>
+            {% endfor %}
+            </ul>
+            {% endblock %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="static/professor_js.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#upload-form').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '{{ url_for("professor_dashboard") }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    showFlashMessage(response.message, response.success);
+                    if (response.success) {
+                        // Optionally reload the page or update the uploads list
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    showFlashMessage('An error occurred while uploading the file.', false);
+                }
+            });
+        });
+        function showFlashMessage(message, isSuccess) {
+            var flashDiv = $('#flash-message');
+            flashDiv.text(message);
+            flashDiv.removeClass('alert-success alert-danger');
+            flashDiv.addClass(isSuccess ? 'alert-success' : 'alert-danger');
+            flashDiv.show();
+            setTimeout(function() {
+                flashDiv.fadeOut('slow');
+            }, 10000); // 10 seconds
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ semester }} Grades - Sitare University</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #1a5f7a;
+            --secondary-color: #dddddd;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --background-color: #ffffff;
+            --card-background: #ece6e6;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            padding: 0px;
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+        }
+
+        .logo img {
+            width: 150px;
+            margin-right: 0px;
+        }
+
+        .container {
+            margin-top: 100px;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .table {
+            background-color: var(--card-background);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .table thead th {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: #12435a;
+            border-color: #12435a;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            height: 70vh;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 60vh;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .chart-container {
+                height: 70vh;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .chart-container {
+                height: 300px;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .table-responsive {
+                font-size: 14px;
+            }
+        }
+
+        .dark-mode {
+            --primary-color: #3498db;
+            --secondary-color: #3b6895;
+            --accent-color: #e74c3c;
+            --text-color: #ffffff;
+            --background-color: #121212;
+            --card-background: #1e1e1e;
+            --border-color:  #444444;
+            --secondary-text-color: #b3b3b3;
+        }
+
+        .dark-mode body {
+            background-color: var(--background-color);
+            color: #ffffff;
+        }
+
+        .dark-mode header {
+            background-color: var(--secondary-color);
+        }
+
+        .dark-mode .container {
+            background-color: var(--background-color);
+        }
+
+        .dark-mode h1, .dark-mode h2, .dark-mode .card-title,.dark-mode .card-text {
+            color:  #f0f0f0;
+        }
+
+        .dark-mode .card {
+            background-color: #333333;
+            border-color: #444444;
+        }
+
+        @media (max-width: 767px) {
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            .logo img {
+                width: 120px;
+            }
+        }
+
+        .dark-mode .table {
+            color: var(--text-color);
+            background-color: var(--card-background);
+        }
+
+        .dark-mode .table thead th {
+            background-color: #1a5f7a;
+            color: #ffffff;
+            border-color: #444444;
+        }
+
+        .dark-mode .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .dark-mode .table-hover tbody tr:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .dark-mode .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .dark-mode .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1001;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #111;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            display: none;
+        }
+
+        .openbtn:hover {
+            background-color: #444;
+        }
+
+        #main {
+            transition: margin-left .5s;
+            padding: 16px;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidebar {padding-top: 15px;}
+            .sidebar a {font-size: 18px;}
+        }
+
+        @media screen and (max-width: 768px) {
+            .openbtn {
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <img src="https://sitare.org/univ/assets/WebP/Sitare-University-Logo.webp" alt="Sitare University Logo">
+            </a>
+            <button class="openbtn" onclick="openNav()">&#9776; Menu</button>
+        </div>
+    </header>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Grades</a>
+        <a href="#">Profile</a>
+        <!-- Add more navigation items as needed -->
+    </div>
+
+    <div id="main">
+        <div class="container">
+            <h1><i class='bx bx-book' style='color: var(--primary-color);'></i> {{ semester }} Grades</h1>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Percentile</h5>
+                            <p class="card-text display-4">{{ "%.2f"|format(percentile) }}%</p>
+                            <p class="card-text">You're in the top {{ "%.2f"|format(100 - percentile) }}% of the class</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="chart-container" style="position: relative; height:40vh; width:100%">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container" style="position: relative; height:40vh; width:100%">
+                        <canvas id="gradeDistribution"></canvas>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="chart-container" style="position: relative; height:50vh; width:100%">
+                        <canvas id="courseComparisonChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="mt-4">
+                <h2 class="mb-4">{{ semester }} Grades</h2>
+                
+                <div class="table-responsive">
+                    <table id="gradesTable" class="table table-striped table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Course Name</th>
+                                <th>Assessment Type</th>
+                                <th>Your Score</th>
+                                <th>Max Marks</th>
+                                <th>Your Percentage</th>
+                                <th>Course Average</th>
+                                <th>Course Max Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grade in grades %}
+                            <tr>
+                                <td>{{ grade.course_name }}</td>
+                                <td>{{ grade.assessment_type }}</td>
+                                <td>{{ grade.score }}</td>
+                                <td>{{ grade.out_of }}</td>
+                                <td>{{ "%.2f"|format(grade.percentage) }}%</td>
+                                <td>{{ "%.2f"|format(course_stats[grade.course_id].avg_score) }}%</td>
+                                <td>{{ course_stats[grade.course_id].max_score }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-active">
+                                <td colspan="2"><strong>Total</strong></td>
+                                <td id="totalScore"></td>
+                                <td id="totalMaxMarks"></td>
+                                <td id="totalPercentage"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        
+            
+        
+            <div class="mt-4">
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-primary">
+                    <i class='bx bx-arrow-back'></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+        
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        function toggleDarkMode(isDark) {
+            document.body.classList.toggle('dark-mode', isDark);
+            document.body.classList.toggle('light-mode', !isDark);
+            updateChartColors(isDark);
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            toggleDarkMode(isDarkMode);
+        });
+
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'darkMode') {
+                toggleDarkMode(event.newValue === 'true');
+            }
+        });
+
+        $(document).ready(function() {
+            var table = $('#gradesTable').DataTable({
+                pageLength: 10,
+                order: [[4, 'desc']]
+            });
+
+            var totalScore = 0;
+            var totalMaxMarks = 0;
+
+            table.rows().every(function() {
+                var data = this.data();
+                totalScore += parseFloat(data[2]);
+                totalMaxMarks += parseFloat(data[3]);
+            });
+
+var totalPercentage = (totalScore / totalMaxMarks) * 100;
+
+$('#totalScore').text(totalScore.toFixed(2));
+$('#totalMaxMarks').text(totalMaxMarks.toFixed(2));
+$('#totalPercentage').text(totalPercentage.toFixed(2) + '%');
+
+var ctx = document.getElementById('gradeDistribution').getContext('2d');
+var gradeData = table.data().toArray();
+
+var percentages = gradeData.map(row => parseFloat(row[4]));
+
+var binSize = 10;
+var numBins = 10;
+
+var bins = new Array(numBins).fill(0);
+var labels = [];
+for (var i = 0; i < numBins; i++) {
+    var start = i * binSize;
+    var end = start + binSize;
+    labels.push(`${start}-${end}%`);
+}
+
+percentages.forEach(percentage => {
+    var index = Math.min(Math.floor(percentage / binSize), numBins - 1);
+    bins[index]++;
+});
+
+var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Grade Distribution',
+            data: bins,
+            backgroundColor: 'rgba(26, 95, 122, 0.8)',
+            borderColor: 'rgba(26, 95, 122, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        ...chartOptions,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Number of Assessments',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    }
+                },
+                ticks: {
+                    precision: 0
+                }
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Percentage Score Range',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    }
+                }
+            }
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Grade Distribution (Percentage)',
+                font: {
+                    size: 18,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            legend: {
+                display: false
+            },
+            tooltip: {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        return `Score Range: ${tooltipItems[0].label}`;
+                    },
+                    label: function(context) {
+                        return `Number of Assessments: ${context.raw}`;
+                    }
+                }
+            }
+        }
+    }
+});
+
+var comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+var comparisonChart = new Chart(comparisonCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Your Rank', 'Rest of Class'],
+        datasets: [{
+            data: [{{ student_rank }}, {{ total_students - student_rank }}],
+            backgroundColor: [
+                'rgba(26, 95, 122, 0.8)',
+                'rgba(255, 159, 64, 0.8)'
+            ],
+            borderColor: [
+                'rgba(26, 95, 122, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        ...chartOptions,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Your Performance Compared to Class',
+                font: {
+                    size: 18,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        var label = context.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed !== undefined) {
+                            label += context.parsed + ' students';
+                        }
+                        return label;
+                    }
+                }
+            }
+        }
+    }
+});
+
+var courseComparisonCtx = document.getElementById('courseComparisonChart').getContext('2d');
+var courseData = {
+    labels: [],
+    yourScores: [],
+    avgScores: [],
+    maxScores: []
+};
+
+{% for grade in grades %}
+    courseData.labels.push("{{ grade.course_name }} - {{ grade.assessment_type }}");
+    courseData.yourScores.push({{ grade.percentage }});
+    courseData.avgScores.push({{ course_stats[grade.course_id].avg_score }});
+    courseData.maxScores.push(({{ course_stats[grade.course_id].max_score }} / {{ grade.out_of }}) * 100);
+{% endfor %}
+
+var courseComparisonChart = new Chart(courseComparisonCtx, {
+    type: 'bar',
+    data: {
+        labels: courseData.labels,
+        datasets: [{
+            label: 'Your Score',
+            data: courseData.yourScores,
+            backgroundColor: 'rgba(26, 95, 122, 0.8)',
+            borderColor: 'rgba(26, 95, 122, 1)',
+            borderWidth: 1
+        }, {
+            label: 'Course Average',
+            data: courseData.avgScores,
+            backgroundColor: 'rgba(255, 159, 64, 0.8)',
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 1
+        }, {
+            label: 'Course Max Score',
+            data: courseData.maxScores,
+            backgroundColor: 'rgba(75, 192, 192, 0.8)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        ...chartOptions,
+        scales: {
+            x: {
+                ticks: {
+                    autoSkip: false,
+                    maxRotation: 45,
+                    minRotation: 45
+                }
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Percentage',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    }
+                },
+                max: 100
+            }
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Your Performance vs Course Statistics',
+                font: {
+                    size: 18,
+                    weight: 'bold'
+                },
+                padding: {
+                    top: 10,
+                    bottom: 30
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ' + context.parsed.y.toFixed(2) + '%';
+                    }
+                }
+            }
+        }
+    }
+});
+
+function updateChartColors(isDarkMode) {
+    const chartTextColor = isDarkMode ? '#ffffff' : '#333333';
+    const chartBackgroundColor = isDarkMode ? '#1e1e1e' : '#ffffff';
+    const gridColor = isDarkMode ? '#444444' : '#e0e0e0';
+
+    [chart, comparisonChart, courseComparisonChart].forEach(chart => {
+        chart.options.plugins.legend.labels.color = chartTextColor;
+        chart.options.scales.x.ticks.color = chartTextColor;
+        chart.options.scales.y.ticks.color = chartTextColor;
+        chart.options.plugins.title.color = chartTextColor;
+        chart.options.plugins.legend.labels.boxWidth = 20;
+        chart.options.plugins.legend.labels.padding = 10;
+        chart.options.plugins.legend.labels.color = chartTextColor;
+        chart.options.plugins.title.color = chartTextColor;
+        chart.options.layout.padding = {
+            left: 10,
+            right: 10,
+            top: 0,
+            bottom: 0
+        };
+        if (chart.config.type === 'bar' || chart.config.type === 'line') {
+            chart.options.scales.x.grid.color = isDarkMode ? '#333333' : '#e0e0e0';
+            chart.options.scales.y.grid.color = isDarkMode ? '#333333' : '#e0e0e0';
+        }
+        chart.update();
+    });
+
+    document.querySelectorAll('.chart-container').forEach(container => {
+        container.style.backgroundColor = chartBackgroundColor;
+    });
+}
+
+
+window.addEventListener('resize', function() {
+    courseComparisonChart.resize();
+    updateChartColors(document.body.classList.contains('dark-mode'));
+});
+
+document.querySelector('.btn-primary').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.location.href = this.href;
+});
+
+document.getElementById('exportPDF').addEventListener('click', function() {
+    html2canvas(document.body).then(function(canvas) {
+        var imgData = canvas.toDataURL('image/png');
+        var pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 0, 0);
+        pdf.save("grades.pdf");
+    });
+});
+
+document.getElementById('exportCSV').addEventListener('click', function() {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+        
+        for (var j = 0; j < cols.length; j++) 
+            row.push(cols[j].innerText);
+        
+        csv.push(row.join(","));        
+    }
+
+    var csvFile = new Blob([csv.join("\n")], {type: "text/csv"});
+    var downloadLink = document.createElement("a");
+    downloadLink.download = "grades.csv";
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+});
+});
+
+function openNav() {
+document.getElementById("mySidebar").style.width = "250px";
+document.getElementById("main").style.marginLeft = "250px";
+}
+
+function closeNav() {
+document.getElementById("mySidebar").style.width = "0";
+document.getElementById("main").style.marginLeft= "0";
+}
+</script>
+</body>
+</html>
+
+
