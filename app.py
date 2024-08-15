@@ -48,6 +48,9 @@ class User(db.Model):
     full_name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
+    grades = db.relationship('Grade', backref='user', cascade="all, delete-orphan", passive_deletes=True)
+    grade_uploads = db.relationship('GradeUpload', backref='professor', cascade="all, delete-orphan", passive_deletes=True)
+
 class Course(db.Model):
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
@@ -58,12 +61,14 @@ class Course(db.Model):
     faculty_name = db.Column(db.String(120), nullable=False)
     faculty_email = db.Column(db.String(120), nullable=False)
 
+    grades = db.relationship('Grade', backref='course', cascade="all, delete-orphan", passive_deletes=True)
+
 class Grade(db.Model):
     __tablename__ = 'grades'
     grade_id = db.Column(db.Integer, primary_key=True)
-    student_email = db.Column(db.String(120), db.ForeignKey('users.email'), nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=False)
-    upload_id = db.Column(db.Integer, db.ForeignKey('grade_uploads.id'), nullable=False)
+    student_email = db.Column(db.String(120), db.ForeignKey('users.email', ondelete='CASCADE'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id', ondelete='CASCADE'), nullable=False)
+    upload_id = db.Column(db.Integer, db.ForeignKey('grade_uploads.id', ondelete='CASCADE'), nullable=False)
     assessment_type = db.Column(db.String(100), nullable=False)
     score = db.Column(db.Integer, nullable=True)
     out_of = db.Column(db.Integer, nullable=False)
@@ -76,7 +81,9 @@ class GradeUpload(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(255), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    professor_email = db.Column(db.String(120), db.ForeignKey('users.email'), nullable=False)
+    professor_email = db.Column(db.String(120), db.ForeignKey('users.email', ondelete='CASCADE'), nullable=False)
+
+    grades = db.relationship('Grade', backref='grade_upload', cascade="all, delete-orphan", passive_deletes=True)
 
 # Helper functions
 def generate_unique_filename(filename):
