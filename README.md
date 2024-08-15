@@ -36,7 +36,7 @@ The Grades Management System is a web application built with Flask that enables 
 1. **Clone the repository**
 2. **Install required Python packages:**
     ```bash
-    pip install Flask,Flask-Dance,Flask-SQLAlchemy,SQLAlchemy,Werkzeug,pandas,psycopg2-binary,python-dotenv
+    pip install -r requirements.txt
 
     ```
 3. **Set up a PostgreSQL database**
