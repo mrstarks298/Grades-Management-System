@@ -2,22 +2,19 @@
   <img src="https://readme-typing-svg.demolab.com?font=Operator+Mono&size=37&duration=2800&pause=2000&color=FAFAFA&center=true&vCenter=true&width=940&height=50&lines=Grades+Management+System;Manage+and+View+Student+Grades+Effortlessly" alt="Typing SVG" />
 </h1>
 
-
 ## Overview
 
-The Grades Management System is a web application built with Flask that allows professors to upload and manage student grades, and students to view their academic performance. The system uses Google OAuth for authentication and PostgreSQL for data storage.
+The Grades Management System is a web application built with Flask that enables professors to upload and manage student grades while allowing students to view their academic performance. The system provides secure Google OAuth authentication and stores data using PostgreSQL.
 
 ## Features
 
 ### For Professors:
-
 - **Secure login using Google OAuth**
 - **Upload grades via CSV files**
 - **View uploaded grade records**
 - **Display detailed grade information for each upload**
 
 ### For Students:
-
 - **Secure login using Google OAuth**
 - **View grades for different semesters**
 - **See detailed grade breakdowns including:**
@@ -31,7 +28,7 @@ The Grades Management System is a web application built with Flask that allows p
 
 - **Backend:** Flask (Python)
 - **Database:** PostgreSQL
-- **Authentication:** Google OAuth
+- **Authentication:** Google OAuth 2.0
 - **ORM:** SQLAlchemy
 - **Frontend:** HTML, CSS, JavaScript
 
@@ -49,9 +46,9 @@ The Grades Management System is a web application built with Flask that allows p
     ```
 5. **Set up Google OAuth:**
     - Create a project in the Google Developers Console
-    - Enable the Google oauth2.0 and also dont forget to declear scopes which are needed.
+    - Enable the Google OAuth 2.0 API
     - Create credentials (OAuth client ID)
-    - Update the client_id and client_secret in the code
+    - Update the `client_id` and `client_secret` in the code
 6. **Set the SECRET_KEY for Flask**
 7. **Run the application:**
     ```bash
@@ -98,15 +95,13 @@ Professors must upload grades in a CSV file with the following columns:
 ## Error Handling
 
 - **Comprehensive error checking for CSV uploads**
-- **Flashy messages for user feedback**
+- **User feedback through flash messages**
 - **Logging of errors for debugging**
-
 
 ## Contributing
 
-Contributions to improve the Grades Management System are welcome. Please feel free to comment your Feedbacks:
-
+Contributions, issues, and feature requests are welcome! Please feel free to submit feedback, open issues, or create a pull request.
 
 ## License
 
-[This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.]
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
