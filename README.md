@@ -88,7 +88,7 @@ Professors must upload grades in a CSV file with the following columns:
 ## Security Features
 
 - **Google OAuth for secure authentication**
-- **Role-based access control (student vs professor)**
+- **Role-based access control (for student email starts with su and at the end sitare.org and for professor you can use any email id )**
 - **Server-side validation of uploaded CSV files**
 - **Protection against unauthorized grade access**
 
