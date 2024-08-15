@@ -1,4 +1,3 @@
-
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(80),
@@ -21,14 +20,14 @@ CREATE TABLE grade_uploads (
     id SERIAL PRIMARY KEY,
     filename VARCHAR(255) NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    professor_email VARCHAR(120) REFERENCES users(email) NOT NULL
+    professor_email VARCHAR(120) REFERENCES users(email) ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE grades (
     grade_id SERIAL PRIMARY KEY,
-    student_email VARCHAR(120) REFERENCES users(email) NOT NULL,
-    course_id INTEGER REFERENCES courses(id) NOT NULL,
-    upload_id INTEGER REFERENCES grade_uploads(id) NOT NULL,
+    student_email VARCHAR(120) REFERENCES users(email) ON DELETE CASCADE NOT NULL,
+    course_id INTEGER REFERENCES courses(id) ON DELETE CASCADE NOT NULL,
+    upload_id INTEGER REFERENCES grade_uploads(id) ON DELETE CASCADE NOT NULL,
     assessment_type VARCHAR(100) NOT NULL,
     score INTEGER,
     out_of INTEGER NOT NULL,
