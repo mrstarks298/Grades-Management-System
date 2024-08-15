@@ -46,7 +46,7 @@ The Grades Management System is a web application built with Flask that allows p
     ```
 5. **Set up Google OAuth:**
     - Create a project in the Google Developers Console
-    - Enable the Google+ API
+    - Enable the Google oauth2.0 and also dont forget to declear scopes which are needed.
     - Create credentials (OAuth client ID)
     - Update the client_id and client_secret in the code
 6. **Set the SECRET_KEY for Flask**
@@ -101,13 +101,9 @@ Professors must upload grades in a CSV file with the following columns:
 
 ## Contributing
 
-Contributions to improve the Grades Management System are welcome. Please follow these steps:
+Contributions to improve the Grades Management System are welcome. Please feel free to comment your Feedbacks:
 
-1. **Fork the repository**
-2. **Create a new branch**
-3. **Make your changes and commit them**
-4. **Push to your fork and submit a pull request**
 
 ## License
 
-[Specify your license here]
+[This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.]
